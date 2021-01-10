@@ -9,11 +9,11 @@
 groupName: acme.mycompany.com
 
 certManager:
-  namespace: cert-manager
+  namespace: kube-system
   serviceAccountName: cert-manager
 
 image:
-  repository: mycompany/webhook-image
+  repository: 4nx/cert-manager-webhook-joker
   tag: latest
   pullPolicy: IfNotPresent
 
