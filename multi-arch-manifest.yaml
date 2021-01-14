@@ -1,0 +1,16 @@
+image: 4nxio/cert-manager-webhook-joker:latest
+manifests:
+  - image: 4nxio/cert-manager-webhook-joker:alpha-amd64
+    platform:
+      architecture: amd64
+      os: linux
+  - image: 4nxio/cert-manager-webhook-joker:alpha-arm32v7
+    platform:
+      architecture: arm
+      os: linux
+      variant: v7
+  - image: 4nxio/cert-manager-webhook-joker:alpha-arm64
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8

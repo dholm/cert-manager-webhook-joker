@@ -1,1 +1,12 @@
-{}
+{
+    "baseURL": "https://svc.joker.com/nic/replace",
+    "dnsType": "TXT",
+    "usernameSecretRef": {
+        "Name": "joker-credentials",
+        "Key": "username"
+    },
+    "passwordSecretRef": {
+        "Name": "joker-credentials",
+        "Key": "password"
+    }
+}
