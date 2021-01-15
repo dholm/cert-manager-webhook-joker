@@ -186,9 +186,6 @@ func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, valu
 	username, err := c.getSecretValue(cfg.UsernameSecretRef, ch.ResourceNamespace)
 	password, err := c.getSecretValue(cfg.PasswordSecretRef, ch.ResourceNamespace)
 
-	fmt.Printf("Username: %s\n", string(username))
-	fmt.Printf("Password: %s\n", string(password))
-
 	// Create client
 	client := &http.Client{}
 	domain := util.UnFqdn(ch.ResolvedZone)
