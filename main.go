@@ -15,6 +15,7 @@ import (
 
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"k8s.io/klog"
 
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
@@ -211,6 +212,13 @@ func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, valu
 	if err != nil {
 		fmt.Println(err)
 	}
+	
+	defer func() {
+		err := resp.Body.Close()
+		if err != nil {
+			klog.Fatal(err)
+		}
+	}()
 
 	// Read response body
 	respBody, _ := ioutil.ReadAll(resp.Body)
