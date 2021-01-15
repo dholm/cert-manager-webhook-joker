@@ -154,6 +154,19 @@ func addQueryParams(baseURL string, queryParams map[string]string) string {
 	return baseURL + params.Encode()
 }
 
+// getSecretValue returns the kubernetes secrets
+func (c *jokerDNSProviderSolver) getSecretValue(selector corev1.SecretKeySelector, ns string) ([]byte, error) {
+	secret, err := c.client.CoreV1().Secrets(ns).Get(selector.Name, metaV1.GetOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	if value, ok := secret.Data[selector.Key]; ok {
+		return value, nil
+	}
+	return nil, err
+}
+
 // getSubDomain returns the subdomain part of a fqdn
 func getSubDomain(domain, fqdn string) string {
 	if idx := strings.Index(fqdn, "."+domain); idx != -1 {
@@ -170,16 +183,11 @@ func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, valu
 	}
 
 	// Get Kubernetes secrets
-	secrets, err := c.client.CoreV1().Secrets(ch.ResourceNamespace).Get(cfg.UsernameSecretRef.Name, metaV1.GetOptions{})
-	if err != nil {
-		return err
-	}
+	username, err := c.getSecretValue(cfg.UsernameSecretRef, ch.ResourceNamespace)
+	password, err := c.getSecretValue(cfg.PasswordSecretRef, ch.ResourceNamespace)
 
-	// Remove trailing newline
-	user := string(secrets.Data["username"])
-	user = user[:len(user)-1]
-	pass := string(secrets.Data["password"])
-	pass = pass[:len(pass)-1]
+	fmt.Printf("Username: %s\n", string(username))
+	fmt.Printf("Password: %s\n", string(password))
 
 	// Create client
 	client := &http.Client{}
@@ -187,8 +195,8 @@ func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, valu
 	label := getSubDomain(domain, ch.ResolvedFQDN)
 
 	queryParams := make(map[string]string)
-	queryParams["username"] = user
-	queryParams["password"] = pass
+	queryParams["username"] = string(username)
+	queryParams["password"] = string(password)
 	queryParams["zone"] = domain
 	queryParams["label"] = label
 	queryParams["type"] = cfg.DNSType
