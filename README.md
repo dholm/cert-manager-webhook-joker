@@ -8,6 +8,8 @@ The following components needs to be already installed on a Kubernetes cluster:
  * helm (>= v3.0.0) [](https://helm.sh/docs/intro/install/)
 
 At joker.com you need to enable Dynamic DNS to get credentials for API access. You can find the documentation [here](https://joker.com/faq/content/6/496/en/let_s-encrypt-support.html).
+
+__ATTENTION__: This webhook doesn't work under ARM (e.g. K3s) because some of the dependencies might have an error.
  
 ## Installation
  1. Create a Kubernetes secret which will hold your joker DynDNS authentication credentials:
