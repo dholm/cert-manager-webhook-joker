@@ -65,7 +65,7 @@ git clone https://github.com/4nx/cert-manager-webhook-joker.git
  4. Choose a unique group name to identify your company or organization (e.g. `acme.yourcompany.com`) and install the Helm chart with:
 
 ```console
-helm upgrade --install cert-manager-webhook-joker --namespace cert-manager --set groupName='acme.yourcompany.com' deploy/cert-manager-webhook-joker
+helm upgrade --install cert-manager-webhook-joker --namespace cert-manager deploy/cert-manager-webhook-joker
 ```
 
  5. Create a certificate issuer with the letsencrypt staging ca for testing purposes (you must insert your e-mail address):
