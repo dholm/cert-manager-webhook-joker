@@ -10,7 +10,7 @@ The following components needs to be already installed on a Kubernetes cluster:
 At joker.com you need to enable Dynamic DNS to get credentials for API access. You can find the documentation [here](https://joker.com/faq/content/6/496/en/let_s-encrypt-support.html).
  
 ## Installation
- 1. Create a Kubernetes secret which will hold your joker DynDNS authentication credentials:
+ 1. Create a Kubernetes secret which will hold your joker DynDNS authentication credentials (base64 representation):
  
 ```yaml
 cat <<EOF | kubectl apply -f -
@@ -20,7 +20,7 @@ metadata:
   name: joker-credentials
   namespace: kube-system
 data:
-  userName: <joker Username>
+  username: <joker Username>
   password: <joker Password>
 EOF
 ```
@@ -93,7 +93,7 @@ spec:
             dnsType: TXT
             userNameSecretRef:
               name: joker-credentials
-              key: userName
+              key: username
             passwordSecretRef:
               name: joker-credentials
               key: password
