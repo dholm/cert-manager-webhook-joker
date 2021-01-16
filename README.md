@@ -62,7 +62,7 @@ EOF
 git clone https://github.com/4nx/cert-manager-webhook-joker.git
 ```
 
- 4. Choose a unique group name to identify your company or organization (e.g. `acme.yourcompany.com`) and install the Helm chart with:
+ 4. Install the Helm chart with:
 
 ```console
 helm upgrade --install cert-manager-webhook-joker --namespace cert-manager deploy/cert-manager-webhook-joker
@@ -75,7 +75,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-staging-test
+  name: letsencrypt-staging-dns01
 spec:
   acme:
     # Change to your letsencrypt email
@@ -115,7 +115,7 @@ spec:
   - example.com
   - "*.example.com"
   issuerRef:
-    name: letsencrypt-staging-test
+    name: letsencrypt-staging-dns01
     kind: ClusterIssuer
 EOF
 ```

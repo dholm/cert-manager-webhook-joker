@@ -224,7 +224,6 @@ func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, valu
 	respBody, _ := ioutil.ReadAll(resp.Body)
 
 	// Display results
-	fmt.Println("Request URL: ", baseURL)
 	fmt.Println("response Status : ", resp.Status)
 	fmt.Println("response Body : ", string(respBody))
 	return nil
