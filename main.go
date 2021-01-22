@@ -212,7 +212,7 @@ func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, valu
 	if err != nil {
 		fmt.Println(err)
 	}
-	
+
 	defer func() {
 		err := resp.Body.Close()
 		if err != nil {

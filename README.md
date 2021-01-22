@@ -12,7 +12,7 @@ At joker.com you need to enable Dynamic DNS to get credentials for API access. Y
 __ATTENTION__: This webhook doesn't work under ARM (e.g. K3s) because some of the dependencies might have an error.
  
 ## Installation
- 1. Create a Kubernetes secret which will hold your joker DynDNS authentication credentials:
+ 1. Create a Kubernetes secret which will hold your joker DynDNS authentication credentials (base64 representation):
  
 ```yaml
 cat <<EOF | kubectl apply -f -
@@ -22,7 +22,7 @@ metadata:
   name: joker-credentials
   namespace: kube-system
 data:
-  userName: <joker Username>
+  username: <joker Username>
   password: <joker Password>
 EOF
 ```
@@ -64,7 +64,7 @@ EOF
 git clone https://github.com/4nx/cert-manager-webhook-joker.git
 ```
 
- 4. Choose a unique group name to identify your company or organization (e.g. `acme.yourcompany.com`) and install the Helm chart with:
+ 4. Install the Helm chart with:
 
 ```console
 helm upgrade --install cert-manager-webhook-joker --namespace cert-manager deploy/cert-manager-webhook-joker
@@ -77,7 +77,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-staging-test
+  name: letsencrypt-staging-dns01
 spec:
   acme:
     # Change to your letsencrypt email
@@ -95,7 +95,7 @@ spec:
             dnsType: TXT
             userNameSecretRef:
               name: joker-credentials
-              key: userName
+              key: username
             passwordSecretRef:
               name: joker-credentials
               key: password
@@ -117,7 +117,7 @@ spec:
   - example.com
   - "*.example.com"
   issuerRef:
-    name: letsencrypt-staging-test
+    name: letsencrypt-staging-dns01
     kind: ClusterIssuer
 EOF
 ```
