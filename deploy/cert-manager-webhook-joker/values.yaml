@@ -13,8 +13,8 @@ certManager:
   serviceAccountName: cert-manager
 
 image:
-  repository: 4nxio/cert-manager-webhook-joker
-  tag: latest
+  repository: dholm/cert-manager-webhook-joker
+  tag: latest-arm64
   pullPolicy: Always
 
 nameOverride: ""

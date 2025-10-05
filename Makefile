@@ -1,5 +1,5 @@
-IMAGE_NAME := "webhook"
-IMAGE_TAG := "latest"
+IMAGE_NAME := dholm/cert-manager-webhook-joker
+IMAGE_TAG := latest
 
 all: image.amd64 image.arm image.arm64
 
