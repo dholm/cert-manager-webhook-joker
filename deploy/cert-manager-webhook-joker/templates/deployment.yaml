@@ -29,6 +29,10 @@ spec:
             - name: https
               containerPort: 443
               protocol: TCP
+          {{- with .Values.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           livenessProbe:
             httpGet:
               scheme: HTTPS
@@ -44,7 +48,7 @@ spec:
               mountPath: /tls
               readOnly: true
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            {{ toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: certs
           secret:

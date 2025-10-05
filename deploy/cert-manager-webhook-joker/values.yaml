@@ -45,6 +45,10 @@ resources: {}
   #  cpu: 100m
   #  memory: 128Mi
 
+containerSecurityContext:
+  runAsUser: 100
+  runAsGroup: 100
+
 nodeSelector: {}
 
 tolerations: []
