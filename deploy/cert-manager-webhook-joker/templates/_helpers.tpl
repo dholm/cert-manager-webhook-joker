@@ -51,6 +51,17 @@ app.kubernetes.io/name: {{ include "cert-manager-webhook-joker.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "cert-manager-webhook-joker.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "cert-manager-webhook-joker.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
 {{- define "cert-manager-webhook-joker.selfSignedIssuer" -}}
 {{ printf "%s-selfsign" (include "cert-manager-webhook-joker.fullname" .) }}
 {{- end -}}

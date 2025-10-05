@@ -14,7 +14,7 @@ spec:
       labels:
         {{- include "cert-manager-webhook-joker.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "cert-manager-webhook-joker.fullname" . }}
+      serviceAccountName: {{ include "cert-manager-webhook-joker.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
