@@ -145,16 +145,6 @@ func loadConfig(cfgJSON *extapi.JSON) (jokerDNSProviderConfig, error) {
 	return cfg, nil
 }
 
-// AddQueryParams adds the query params to base URL
-func addQueryParams(baseURL string, queryParams map[string]string) string {
-	baseURL += "?"
-	params := url.Values{}
-	for key, value := range queryParams {
-		params.Add(key, value)
-	}
-	return baseURL + params.Encode()
-}
-
 // getSecretValue returns the kubernetes secrets
 func (c *jokerDNSProviderSolver) getSecretValue(selector corev1.SecretKeySelector, ns string) ([]byte, error) {
 	secret, err :=
@@ -193,19 +183,19 @@ func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, valu
 	domain := util.UnFqdn(ch.ResolvedZone)
 	label := getSubDomain(domain, ch.ResolvedFQDN)
 
-	queryParams := make(map[string]string)
-	queryParams["username"] = string(username)
-	queryParams["password"] = string(password)
-	queryParams["zone"] = domain
-	queryParams["label"] = label
-	queryParams["type"] = cfg.DNSType
-	queryParams["value"] = value
-	baseURL := addQueryParams(cfg.BaseURL, queryParams)
-
-	req, err := http.NewRequest("POST", baseURL, nil)
+	req, err := http.NewRequest("POST", cfg.BaseURL, nil)
 	if err != nil {
 		return err
 	}
+
+	q := req.URL.Query()
+	q.Add("username", string(username))
+	q.Add("password", string(password))
+	q.Add("zone", domain)
+	q.Add("label", label)
+	q.Add("type", cfg.DNSType)
+	q.Add("value", value)
+	req.URL.RawQuery = q.Encode()
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
