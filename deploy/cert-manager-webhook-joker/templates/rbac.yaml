@@ -18,6 +18,29 @@ subjects:
     name: {{ include "cert-manager-webhook-joker.serviceAccountName" . }}
     namespace: {{ .Release.Namespace }}
 ---
+# Grant cert-manager permission to validate using our apiserver
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "cert-manager-webhook-joker.fullname" . }}
+  labels:
+    {{- include "cert-manager-webhook-joker.labels" . | nindent 4 }}
+rules:
+  - apiGroups:
+      - ''
+    resources:
+      - 'secrets'
+    verbs:
+      - 'get'
+  - apiGroups:
+      - 'flowcontrol.apiserver.k8s.io'
+    resources:
+      - 'flowschemas'
+      - 'prioritylevelconfigurations'
+    verbs:
+      - 'watch'
+      - 'list'
+---
 # Grant the webhook permission to read the ConfigMap containing the Kubernetes
 # apiserver's requestheader-ca-certificate.
 # This ConfigMap is automatically created by the Kubernetes apiserver.
