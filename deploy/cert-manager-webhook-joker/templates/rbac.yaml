@@ -3,10 +3,7 @@ kind: ServiceAccount
 metadata:
   name: {{ include "cert-manager-webhook-joker.fullname" . }}
   labels:
-    app: {{ include "cert-manager-webhook-joker.name" . }}
-    chart: {{ include "cert-manager-webhook-joker.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "cert-manager-webhook-joker.labels" . | nindent 4 }}
 ---
 # Grant the webhook permission to read the ConfigMap containing the Kubernetes
 # apiserver's requestheader-ca-certificate.
@@ -17,10 +14,7 @@ metadata:
   name: {{ include "cert-manager-webhook-joker.fullname" . }}:webhook-authentication-reader
   namespace: kube-system
   labels:
-    app: {{ include "cert-manager-webhook-joker.name" . }}
-    chart: {{ include "cert-manager-webhook-joker.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "cert-manager-webhook-joker.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -38,10 +32,7 @@ kind: ClusterRoleBinding
 metadata:
   name: {{ include "cert-manager-webhook-joker.fullname" . }}:auth-delegator
   labels:
-    app: {{ include "cert-manager-webhook-joker.name" . }}
-    chart: {{ include "cert-manager-webhook-joker.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "cert-manager-webhook-joker.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -58,10 +49,7 @@ kind: ClusterRole
 metadata:
   name: {{ include "cert-manager-webhook-joker.fullname" . }}:domain-solver
   labels:
-    app: {{ include "cert-manager-webhook-joker.name" . }}
-    chart: {{ include "cert-manager-webhook-joker.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "cert-manager-webhook-joker.labels" . | nindent 4 }}
 rules:
   - apiGroups:
       - {{ .Values.groupName }}
@@ -75,10 +63,7 @@ kind: ClusterRoleBinding
 metadata:
   name: {{ include "cert-manager-webhook-joker.fullname" . }}:domain-solver
   labels:
-    app: {{ include "cert-manager-webhook-joker.name" . }}
-    chart: {{ include "cert-manager-webhook-joker.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "cert-manager-webhook-joker.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

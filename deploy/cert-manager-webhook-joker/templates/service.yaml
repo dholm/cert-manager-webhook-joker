@@ -3,10 +3,7 @@ kind: Service
 metadata:
   name: {{ include "cert-manager-webhook-joker.fullname" . }}
   labels:
-    app: {{ include "cert-manager-webhook-joker.name" . }}
-    chart: {{ include "cert-manager-webhook-joker.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "cert-manager-webhook-joker.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,5 +12,4 @@ spec:
       protocol: TCP
       name: https
   selector:
-    app: {{ include "cert-manager-webhook-joker.name" . }}
-    release: {{ .Release.Name }}
+    {{- include "cert-manager-webhook-joker.selectorLabels" . | nindent 4 }}

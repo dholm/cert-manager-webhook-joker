@@ -3,21 +3,16 @@ kind: Deployment
 metadata:
   name: {{ include "cert-manager-webhook-joker.fullname" . }}
   labels:
-    app: {{ include "cert-manager-webhook-joker.name" . }}
-    chart: {{ include "cert-manager-webhook-joker.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "cert-manager-webhook-joker.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "cert-manager-webhook-joker.name" . }}
-      release: {{ .Release.Name }}
+      {{- include "cert-manager-webhook-joker.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ include "cert-manager-webhook-joker.name" . }}
-        release: {{ .Release.Name }}
+        {{- include "cert-manager-webhook-joker.labels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "cert-manager-webhook-joker.fullname" . }}
       containers:
