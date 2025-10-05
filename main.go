@@ -150,13 +150,15 @@ func (c *jokerDNSProviderSolver) getSecretValue(selector corev1.SecretKeySelecto
 	secret, err :=
 		c.client.CoreV1().Secrets(ns).Get(context.TODO(), selector.Name, metaV1.GetOptions{})
 	if err != nil {
+		klog.Fatal(err)
 		return nil, err
 	}
 
-	if value, ok := secret.Data[selector.Key]; ok {
-		return value, nil
+	value, ok := secret.Data[selector.Key]
+	if !ok {
+		return nil, fmt.Errorf("key %s not found in secret %s in namespace %s", selector.Key, selector.Name, ns)
 	}
-	return nil, err
+	return value, nil
 }
 
 // getSubDomain returns the subdomain part of a fqdn
@@ -171,12 +173,21 @@ func getSubDomain(domain, fqdn string) string {
 func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, value string) error {
 	cfg, err := loadConfig(ch.Config)
 	if err != nil {
+		klog.Fatal(err)
 		return err
 	}
 
 	// Get Kubernetes secrets
 	username, err := c.getSecretValue(cfg.UsernameSecretRef, ch.ResourceNamespace)
+	if err != nil {
+		klog.Fatal(err)
+		return err
+	}
 	password, err := c.getSecretValue(cfg.PasswordSecretRef, ch.ResourceNamespace)
+	if err != nil {
+		klog.Fatal(err)
+		return err
+	}
 
 	// Create client
 	client := &http.Client{}
@@ -185,6 +196,7 @@ func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, valu
 
 	req, err := http.NewRequest("POST", cfg.BaseURL, nil)
 	if err != nil {
+		klog.Fatal(err)
 		return err
 	}
 
@@ -201,7 +213,7 @@ func (c *jokerDNSProviderSolver) sendRequest(ch *v1alpha1.ChallengeRequest, valu
 
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		klog.Fatal(err)
 	}
 
 	defer func() {
